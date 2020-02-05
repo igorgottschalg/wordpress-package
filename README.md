@@ -7,7 +7,7 @@ Requires [WordPress CLI](https://wp-cli.org).
 ## Installation
 
 ```
-npm install -g wordpress-package
+npm install -g @gottschalg/wordpress-package
 ```
 
 ## Usage

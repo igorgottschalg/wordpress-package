@@ -1,20 +1,24 @@
 {
-  "name": "wordpress-package",
+  "name": "@gottschalg/wordpress-package",
   "version": "1.0.0",
-  "description": "",
+  "description": "A node.js JavaScript cli for create a WordPress package.json.",
   "main": "index.js",
   "preferGlobal": true,
   "bin": {
-    "wpcli-json": "./bin/index.js"
+    "wpcli-json": "bin/index.js"
   },
   "scripts": {
     "start": "sucrase-node ./src/index.js",
     "build": "sucrase ./src -d ./bin --transforms imports",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["Wordpress", "CLI"],
   "author": "Igor Gottschalg (https://gottschalg.mobi)",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igorgottschalg/wordpress-package.git"
+  },
   "dependencies": {
     "sucrase": "^3.12.1",
     "chalk": "^3.0.0",
@@ -29,5 +33,10 @@
   "prettier": {
     "quoteProps": "consistent",
     "tabWidth": 4
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/igorgottschalg/wordpress-package/issues"
+  },
+  "homepage": "https://github.com/igorgottschalg/wordpress-package#readme",
+  "devDependencies": {}
 }
