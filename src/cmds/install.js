@@ -10,10 +10,10 @@ exports.handler = function() {
     if (!ReadFile.check()) return;
     let wp = ReadFile.read();
     if (wp.version) {
-        (async () => await exec(`wp core download ${wp.language} --version=${wp.version} --allow-root`))();
+        (async () => await exec(`wp core download ${wp.language ? wp.language : '' } --version=${wp.version} --allow-root`))();
     }
     if (wp.language) {
-        (async () => await exec(`wp language core activate ${wp.language} --allow-root`))();
+        (async () => await exec(`wp language core activate ${wp.language ? wp.language : ''} --allow-root`))();
     }
     if (wp.plugins) {
         wp.plugins.every(
