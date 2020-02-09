@@ -13,19 +13,19 @@ npm install -g @gottschalg/wordpress-package
 ## Usage
 
 ```shell
-wpcli-json init
+wpp init
 ```
 
 ```shell
-wpcli-json install
+wpp install
 ```
 
 ```shell
-wpcli-json plugins add PLUGIN_NAME
+wpp plugins add PLUGIN_NAME
 ```
 
 ```shell
-wpcli-json themes add THEME_NAME
+wpp themes add THEME_NAME
 ```
 
 More usage examples can be read on help `--help`.

@@ -1,11 +1,11 @@
 {
   "name": "@gottschalg/wordpress-package",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A node.js JavaScript cli for create a WordPress package.json.",
   "main": "index.js",
   "preferGlobal": true,
   "bin": {
-    "wpcli-json": "bin/index.js"
+    "wpp": "bin/index.js"
   },
   "scripts": {
     "start": "sucrase-node ./src/index.js",
