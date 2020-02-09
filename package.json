@@ -10,7 +10,8 @@
   "scripts": {
     "start": "sucrase-node ./src/index.js",
     "build": "sucrase ./src -d ./bin --transforms imports",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish": "npm publish --access public"
   },
   "keywords": ["Wordpress", "CLI"],
   "author": "Igor Gottschalg (https://gottschalg.mobi)",
