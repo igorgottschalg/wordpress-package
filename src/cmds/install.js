@@ -13,24 +13,18 @@ exports.handler = ({ options }) => {
     if (!ReadFile.check()) return;
     let wp = ReadFile.read();
 
-    if (options) {
-        if (options.includes("--only-config") && wp.config) {
-            createWordpressConfig(wp);
-            return;
-        }
-        if (options.includes("--core-install") && wp.version) {
-            installWordpressCore(wp);
-            return;
-        }
-        if (options.includes("--core-plugins") && wp.plugins) {
-            installPlugins(wp);
-            return;
-        }
+    if (wp.config) {
+        createWordpressConfig(wp);
+        if(options && options.includes("--only-config"))return;
     }
-
-    if (wp.config) createWordpressConfig(wp);
-    if (wp.version) installWordpressCore(wp);
-    if (wp.plugins) installPlugins(wp);
+    if (wp.version) {
+        installWordpressCore(wp);
+       if(options &&  options.includes("--core-install")) return
+    }
+    if (wp.plugins) {
+        installPlugins(wp);
+        if (options && options.includes("--core-plugins")) return;
+    }
 };
 
 const installWordpressCore = wp => {

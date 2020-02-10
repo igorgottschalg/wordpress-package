@@ -23,6 +23,11 @@
         "type": "git",
         "url": "git+https://github.com/igorgottschalg/wordpress-package.git"
     },
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn build"
+        }
+    },
     "dependencies": {
         "chalk": "^3.0.0",
         "cli-progress": "^3.6.0",
@@ -42,6 +47,7 @@
     },
     "homepage": "https://github.com/igorgottschalg/wordpress-package#readme",
     "devDependencies": {
+        "husky": "^4.2.1",
         "sucrase": "^3.12.1"
     }
 }
