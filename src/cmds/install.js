@@ -21,14 +21,14 @@ const installWordpressCore = wp => {
     resolingSpinner.start();
 
     try {
-        let arguments = [
+        let args = [
             "core",
             "download",
             `--version=${wp.version}`,
             "--allow-root"
         ];
-        if (wp.language) arguments.push(`--locale=${wp.language}`);
-        let { stdout } = spawnSync("wp", arguments, { stdio: "inherit" });
+        if (wp.language) args.push(`--locale=${wp.language}`);
+        let { stdout } = spawnSync("wp", args, { stdio: ['inherit', 'inherit', 'pipe'] });
         log(stdout);
     } catch (e) {
         log(e.stderr);
@@ -54,7 +54,7 @@ const createWordpressConfig = wp => {
                 `--dbhost=${wp.config.dbhost}`,
                 " --allow-root"
             ],
-            { stdio: "inherit" }
+            { stdio: ['inherit', 'inherit', 'pipe'] }
         );
         log(stdout);
     } catch (e) {
