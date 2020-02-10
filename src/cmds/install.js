@@ -7,7 +7,7 @@ exports.command = "install [options...]";
 exports.aliases = "i";
 exports.desc = "Install a wordpress package";
 exports.builder = {
-    options: []
+    options: {}
 };
 exports.handler = ({ options }) => {
     if (!ReadFile.check()) return;
