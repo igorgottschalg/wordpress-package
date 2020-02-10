@@ -12,7 +12,6 @@ exports.builder = {
 };
 
 const questionair = () => {
-    const dir_name = __dirname.split("/");
     const questions = [
         {
             type: "input",
@@ -31,6 +30,19 @@ exports.handler = async () => {
         return;
     }
     const answers = await questionair();
-    _readfile2.default.save(answers, "..");
+    _readfile2.default.save(
+        {
+            ...answers,
+            config: {
+                dbname: "",
+                dbuser: "",
+                dbpass: "",
+                dbhost: ""
+            },
+            plugins: [],
+            themes: []
+        },
+        ".."
+    );
     log(`🚀 ${_chalk2.default.green("Wordpress package was created!")}`);
 };
