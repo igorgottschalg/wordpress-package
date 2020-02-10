@@ -7,25 +7,25 @@ exports.command = "install [options...]";
 exports.aliases = "i";
 exports.desc = "Install a wordpress package";
 exports.builder = {
-    options: {}
+    options: []
 };
 exports.handler = ({ options }) => {
     if (!ReadFile.check()) return;
     let wp = ReadFile.read();
 
-    if (options.includes("--only-config") && wp.config) {
-        createWordpressConfig(wp);
-        return;
-    }
-
-    if (options.includes("--core-install") && wp.version) {
-        installWordpressCore(wp);
-        return;
-    }
-
-    if (options.includes("--core-plugins") && wp.plugins) {
-        installPlugins(wp);
-        return;
+    if (options) {
+        if (options.includes("--only-config") && wp.config) {
+            createWordpressConfig(wp);
+            return;
+        }
+        if (options.includes("--core-install") && wp.version) {
+            installWordpressCore(wp);
+            return;
+        }
+        if (options.includes("--core-plugins") && wp.plugins) {
+            installPlugins(wp);
+            return;
+        }
     }
 
     if (wp.config) createWordpressConfig(wp);
