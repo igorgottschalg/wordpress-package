@@ -17,7 +17,7 @@ const questionair = () => {
         {
             type: "input",
             name: "version",
-            default: "5.3.1",
+            default: "latest",
             message: "Wordpress version?"
         }
     ];
