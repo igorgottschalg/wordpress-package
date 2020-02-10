@@ -49,12 +49,11 @@ const installWordpressCore = wp => {
 
     let args = ["core", "download", `--version=${wp.version}`, "--allow-root"];
     if (wp.language) args.push(`--locale=${wp.language}`);
-    let { err, stdout } = _child_process.spawnSync.call(void 0, "wp", args, {
+    let respose = _child_process.spawnSync.call(void 0, "wp", args, {
         stdio: ["inherit", "inherit", "pipe"]
     });
 
-    if (stdout) log(stdout);
-    if (err) log(err);
+    log(respose);
     resolingSpinner.stop();
     log("");
 };
