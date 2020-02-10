@@ -1,6 +1,7 @@
 "use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _readfile = require('../read-file'); var _readfile2 = _interopRequireDefault(_readfile);
 var _child_process = require('child_process');
 var _clispinner = require('cli-spinner');
+var _chalk = require('chalk'); var _chalk2 = _interopRequireDefault(_chalk);
 const log = console.log;
 
 exports.command = "install [options...]";
@@ -10,7 +11,10 @@ exports.builder = {
     options: {}
 };
 exports.handler = ({ options }) => {
-    if (!_readfile2.default.check()) return;
+    if (!_readfile2.default.check()) {
+        log(_chalk2.default.red("Wordpress package not found!"));
+        process.exit();
+    }
     let wp = _readfile2.default.read();
 
     if (!options) options = Array("--all");
@@ -45,11 +49,11 @@ const installWordpressCore = wp => {
 
     let args = ["core", "download", `--version=${wp.version}`, "--allow-root"];
     if (wp.language) args.push(`--locale=${wp.language}`);
-    let { stdout } = _child_process.spawnSync.call(void 0, "wp", args, {
+    let { err,  } = _child_process.spawnSync.call(void 0, "wp", args, {
         stdio: ["inherit", "inherit", "pipe"]
     });
 
-    if (stdout) log(stdout.toString());
+    if (err) log(err);
     resolingSpinner.stop();
     log("");
 };
@@ -59,7 +63,7 @@ const createWordpressConfig = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    let { stdout } = _child_process.spawnSync.call(void 0, 
+    let { err } = _child_process.spawnSync.call(void 0, 
         "wp",
         [
             "config",
@@ -84,7 +88,7 @@ const createWordpressConfig = wp => {
         { stdio: ["inherit", "inherit", "pipe"] }
     );
 
-    if (stdout) log(stdout.toString());
+    if (err) log(err);
     resolingSpinner.stop();
     log("");
 };
@@ -95,14 +99,14 @@ const installPlugins = wp => {
     resolingSpinner.start();
 
     wp.plugins.forEach(plugin => {
-        let { stdout } = _child_process.spawnSync.call(void 0, 
+        let { err } = _child_process.spawnSync.call(void 0, 
             "wp",
             ["plugin", "install", plugin, "--allow-root"],
             {
                 stdio: ["inherit", "inherit", "pipe"]
             }
         );
-        if (stdout) log(stdout.toString());
+        if (err) log(err);
     });
 
     resolingSpinner.stop();

@@ -1,6 +1,7 @@
 import ReadFile from "../read-file";
 import { spawnSync } from "child_process";
 import { Spinner } from "cli-spinner";
+import Chalk from "chalk";
 const log = console.log;
 
 exports.command = "install [options...]";
@@ -10,7 +11,10 @@ exports.builder = {
     options: {}
 };
 exports.handler = ({ options }) => {
-    if (!ReadFile.check()) return;
+    if (!ReadFile.check()) {
+        log(Chalk.red("Wordpress package not found!"));
+        process.exit();
+    }
     let wp = ReadFile.read();
 
     if (!options) options = Array("--all");
@@ -45,11 +49,11 @@ const installWordpressCore = wp => {
 
     let args = ["core", "download", `--version=${wp.version}`, "--allow-root"];
     if (wp.language) args.push(`--locale=${wp.language}`);
-    let { stdout } = spawnSync("wp", args, {
+    let { err,  } = spawnSync("wp", args, {
         stdio: ["inherit", "inherit", "pipe"]
     });
 
-    if (stdout) log(stdout.toString());
+    if (err) log(err);
     resolingSpinner.stop();
     log("");
 };
@@ -59,7 +63,7 @@ const createWordpressConfig = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    let { stdout } = spawnSync(
+    let { err } = spawnSync(
         "wp",
         [
             "config",
@@ -84,7 +88,7 @@ const createWordpressConfig = wp => {
         { stdio: ["inherit", "inherit", "pipe"] }
     );
 
-    if (stdout) log(stdout.toString());
+    if (err) log(err);
     resolingSpinner.stop();
     log("");
 };
@@ -95,14 +99,14 @@ const installPlugins = wp => {
     resolingSpinner.start();
 
     wp.plugins.forEach(plugin => {
-        let { stdout } = spawnSync(
+        let { err } = spawnSync(
             "wp",
             ["plugin", "install", plugin, "--allow-root"],
             {
                 stdio: ["inherit", "inherit", "pipe"]
             }
         );
-        if (stdout) log(stdout.toString());
+        if (err) log(err);
     });
 
     resolingSpinner.stop();
