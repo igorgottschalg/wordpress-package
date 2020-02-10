@@ -25,7 +25,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn build"
+            "pre-push": "yarn build && gaa && git commit -m 'Build'"
         }
     },
     "dependencies": {
