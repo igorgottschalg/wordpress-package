@@ -35,10 +35,14 @@ const createWordpressConfig = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    let { stdout } = execSync(
-        `wp config create  --dbname=${wp.config.dbname} --dbuser=${wp.config.dbuser} --dbpass=${wp.config.dbpass} --dbhost=${wp.config.dbhost}  --allow-root`
-    );
-    log(stdout);
+    try {
+        let { stdout } = execSync(
+            `wp config create  --dbname=${wp.config.dbname} --dbuser=${wp.config.dbuser} --dbpass=${wp.config.dbpass} --dbhost=${wp.config.dbhost}  --allow-root`
+        );
+        log(stdout);
+    } catch (e) {
+        log("ee", e)
+    }
 
     resolingSpinner.stop();
 };
