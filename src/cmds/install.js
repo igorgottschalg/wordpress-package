@@ -3,12 +3,30 @@ import { spawnSync } from "child_process";
 import { Spinner } from "cli-spinner";
 const log = console.log;
 
-exports.command = "install";
+exports.command = "install [options...]";
 exports.aliases = "i";
 exports.desc = "Install a wordpress package";
-exports.handler = function() {
+exports.builder = {
+    options: {}
+};
+exports.handler = ({ options }) => {
     if (!ReadFile.check()) return;
     let wp = ReadFile.read();
+
+    if (options.includes("--only-config") && wp.config) {
+        createWordpressConfig(wp);
+        return;
+    }
+
+    if (options.includes("--core-install") && wp.version) {
+        installWordpressCore(wp);
+        return;
+    }
+
+    if (options.includes("--core-plugins") && wp.plugins) {
+        installPlugins(wp);
+        return;
+    }
 
     if (wp.config) createWordpressConfig(wp);
     if (wp.version) installWordpressCore(wp);
@@ -28,8 +46,9 @@ const installWordpressCore = wp => {
             "--allow-root"
         ];
         if (wp.language) args.push(`--locale=${wp.language}`);
-        let { stdout } = spawnSync("wp", args, { stdio: ['inherit', 'inherit', 'pipe'] });
-        log(stdout);
+        spawnSync("wp", args, {
+            stdio: ["inherit", "inherit", "pipe"]
+        });
     } catch (e) {
         log(e.stderr);
     }
@@ -43,7 +62,7 @@ const createWordpressConfig = wp => {
     resolingSpinner.start();
 
     try {
-        let { stdout } = spawnSync(
+        spawnSync(
             "wp",
             [
                 "config",
@@ -54,9 +73,8 @@ const createWordpressConfig = wp => {
                 `--dbhost=${wp.config.dbhost}`,
                 " --allow-root"
             ],
-            { stdio: ['inherit', 'inherit', 'pipe'] }
+            { stdio: ["inherit", "inherit", "pipe"] }
         );
-        log(stdout);
     } catch (e) {
         log("ee", e);
     }
@@ -72,7 +90,7 @@ const installPlugins = wp => {
     wp.plugins.forEach(plugin => {
         try {
             spawnSync("wp", ["plugin", "install", plugin, "--allow-root"], {
-                stdio: "inherit"
+                stdio: ["inherit", "inherit", "pipe"]
             });
         } catch (e) {
             log(e.stderr);
