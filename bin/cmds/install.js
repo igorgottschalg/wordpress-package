@@ -49,11 +49,11 @@ const installWordpressCore = wp => {
 
     let args = ["core", "download", `--version=${wp.version}`, "--allow-root"];
     if (wp.language) args.push(`--locale=${wp.language}`);
-    let respose = _child_process.spawnSync.call(void 0, "wp", args, {
+    let { stderr  } = _child_process.spawnSync.call(void 0, "wp", args, {
         stdio: ["inherit", "inherit", "pipe"]
     });
 
-    log(respose);
+    if (stderr) log(stderr.toString('utf8'));
     resolingSpinner.stop();
     log("");
 };
@@ -63,7 +63,7 @@ const createWordpressConfig = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    let { err, stdout } = _child_process.spawnSync.call(void 0, 
+    let { stderr } = _child_process.spawnSync.call(void 0, 
         "wp",
         [
             "config",
@@ -88,8 +88,7 @@ const createWordpressConfig = wp => {
         { stdio: ["inherit", "inherit", "pipe"] }
     );
 
-    if (stdout) log(stdout);
-    if (err) log(err);
+    if (stderr) log(stderr.toString('utf8'));
     resolingSpinner.stop();
     log("");
 };
@@ -100,15 +99,14 @@ const installPlugins = wp => {
     resolingSpinner.start();
 
     wp.plugins.forEach(plugin => {
-        let { err, stdout } = _child_process.spawnSync.call(void 0, 
+        let { stderr } = _child_process.spawnSync.call(void 0, 
             "wp",
             ["plugin", "install", plugin, "--allow-root"],
             {
                 stdio: ["inherit", "inherit", "pipe"]
             }
         );
-        if (stdout) log(stdout);
-        if (err) log(err);
+        if (stderr) log(stderr.toString('utf8'));
     });
     resolingSpinner.stop();
     log("");
