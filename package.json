@@ -1,43 +1,47 @@
 {
-  "name": "@gottschalg/wordpress-package",
-  "version": "1.0.6",
-  "description": "A node.js JavaScript cli for create a WordPress package.json.",
-  "main": "index.js",
-  "preferGlobal": true,
-  "bin": {
-    "wpp": "bin/index.js"
-  },
-  "scripts": {
-    "start": "sucrase-node ./src/index.js",
-    "build": "sucrase ./src -d ./bin --transforms imports",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "npm publish --access public"
-  },
-  "keywords": ["Wordpress", "CLI"],
-  "author": "Igor Gottschalg (https://gottschalg.mobi)",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/igorgottschalg/wordpress-package.git"
-  },
-  "dependencies": {
-    "sucrase": "^3.12.1",
-    "chalk": "^3.0.0",
-    "cli-progress": "^3.6.0",
-    "cli-spinner": "^0.2.10",
-    "fs": "^0.0.1-security",
-    "inquirer": "^7.0.4",
-    "node-fetch": "^2.6.0",
-    "path": "^0.12.7",
-    "yargs": "13.2"
-  },
-  "prettier": {
-    "quoteProps": "consistent",
-    "tabWidth": 4
-  },
-  "bugs": {
-    "url": "https://github.com/igorgottschalg/wordpress-package/issues"
-  },
-  "homepage": "https://github.com/igorgottschalg/wordpress-package#readme",
-  "devDependencies": {}
+    "name": "@gottschalg/wordpress-package",
+    "version": "1.0.15",
+    "description": "A node.js JavaScript cli for create a WordPress package.json.",
+    "main": "index.js",
+    "preferGlobal": true,
+    "bin": {
+        "wpp": "bin/index.js"
+    },
+    "scripts": {
+        "start": "sucrase-node ./src/index.js",
+        "build": "sucrase ./src -d ./bin --transforms imports",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "publish": "npm publish --access public"
+    },
+    "keywords": [
+        "Wordpress",
+        "CLI"
+    ],
+    "author": "Igor Gottschalg (https://gottschalg.mobi)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/igorgottschalg/wordpress-package.git"
+    },
+    "dependencies": {
+        "chalk": "^3.0.0",
+        "cli-progress": "^3.6.0",
+        "cli-spinner": "^0.2.10",
+        "fs": "^0.0.1-security",
+        "inquirer": "^7.0.4",
+        "node-fetch": "^2.6.0",
+        "path": "^0.12.7",
+        "yargs": "13.2"
+    },
+    "prettier": {
+        "quoteProps": "consistent",
+        "tabWidth": 4
+    },
+    "bugs": {
+        "url": "https://github.com/igorgottschalg/wordpress-package/issues"
+    },
+    "homepage": "https://github.com/igorgottschalg/wordpress-package#readme",
+    "devDependencies": {
+        "sucrase": "^3.12.1"
+    }
 }

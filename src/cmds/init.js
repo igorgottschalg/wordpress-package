@@ -16,15 +16,8 @@ const questionair = () => {
     const questions = [
         {
             type: "input",
-            name: "name",
-            message: "Package name?",
-            default: dir_name[dir_name.length - 1],
-            filter: val => val.toLowerCase()
-        },
-        {
-            type: "input",
             name: "version",
-            default: "5.3.2",
+            default: "5.3.1",
             message: "Wordpress version?"
         }
     ];
