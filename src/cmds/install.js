@@ -75,15 +75,7 @@ const createWordpressConfig = wp => {
             `--dbhost=${wp.config.dbhost}`,
             "--skip-check",
             "--extra-php",
-            `<<PHP
-                    define( 'DISALLOW_FILE_EDIT', true );
-                    define( 'WP_CACHE', true );
-                    define( 'WP_DEBUG', false );
-                    define( 'WP_DEBUG_LOG', false );
-                    define( 'WP_DEBUG_DISPLAY', false );
-                    define('FS_METHOD', 'direct');
-                PHP
-                `
+            `<<PHP define( 'DISALLOW_FILE_EDIT', true ); \n define( 'WP_CACHE', true ); \n define( 'WP_DEBUG', false ); \n define( 'WP_DEBUG_LOG', false ); \n define( 'WP_DEBUG_DISPLAY', false ); \n define('FS_METHOD', 'direct'); \nPHP`
         ],
         { stdio: ["inherit", "inherit", "pipe"] }
     );
