@@ -10,8 +10,8 @@ exports.handler = function() {
     if (!ReadFile.check()) return;
     let wp = ReadFile.read();
 
-    if (wp.version) installWordpressCore(wp);
     if (wp.config) createWordpressConfig(wp);
+    if (wp.version) installWordpressCore(wp);
     if (wp.plugins) installPlugins(wp);
 };
 
