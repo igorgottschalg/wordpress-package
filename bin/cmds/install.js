@@ -13,17 +13,28 @@ exports.handler = ({ options }) => {
     if (!_readfile2.default.check()) return;
     let wp = _readfile2.default.read();
 
-    if (wp.config) {
-        createWordpressConfig(wp);
-        if (options && options.includes("--only-config")) process.exit();
-    }
-    if (wp.version) {
+    if (!options.length) options = Array("--all");
+
+    if (
+        (wp.version && options.includes("--core-install")) ||
+        options.includes("--all")
+    ) {
         installWordpressCore(wp);
-        if (options && options.includes("--core-install")) process.exit();
+        if (options.includes("--core-install")) process.exit();
     }
-    if (wp.plugins) {
+    if (
+        (wp.config && options.includes("--core-config")) ||
+        options.includes("--all")
+    ) {
+        createWordpressConfig(wp);
+        if (options.includes("--only-config")) process.exit();
+    }
+    if (
+        (wp.plugins && options.includes("--core-plugins")) ||
+        options.includes("--all")
+    ) {
         installPlugins(wp);
-        if (options && options.includes("--core-plugins")) process.exit();
+        if (options.includes("--core-plugins")) process.exit();
     }
 };
 
@@ -32,22 +43,15 @@ const installWordpressCore = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    try {
-        let args = [
-            "core",
-            "download",
-            `--version=${wp.version}`,
-            "--allow-root"
-        ];
-        if (wp.language) args.push(`--locale=${wp.language}`);
-        _child_process.spawnSync.call(void 0, "wp", args, {
-            stdio: ["inherit", "inherit", "pipe"]
-        });
-    } catch (e) {
-        log(e.stderr);
-    }
+    let args = ["core", "download", `--version=${wp.version}`, "--allow-root"];
+    if (wp.language) args.push(`--locale=${wp.language}`);
+    let { stderr } = _child_process.spawnSync.call(void 0, "wp", args, {
+        stdio: ["inherit", "inherit", "pipe"]
+    });
 
+    if (stderr) log(stderr);
     resolingSpinner.stop();
+    log("");
 };
 
 const createWordpressConfig = wp => {
@@ -55,19 +59,18 @@ const createWordpressConfig = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    try {
-        _child_process.spawnSync.call(void 0, 
-            "wp",
-            [
-                "config",
-                "create",
-                `--dbname=${wp.config.dbname}`,
-                `--dbuser=${wp.config.dbuser}`,
-                `--dbpass=${wp.config.dbpass}`,
-                `--dbhost=${wp.config.dbhost}`,
-                '--skip-check',
-                '--extra-php',
-                `<<PHP
+    let { stderr } = _child_process.spawnSync.call(void 0, 
+        "wp",
+        [
+            "config",
+            "create",
+            `--dbname=${wp.config.dbname}`,
+            `--dbuser=${wp.config.dbuser}`,
+            `--dbpass=${wp.config.dbpass}`,
+            `--dbhost=${wp.config.dbhost}`,
+            "--skip-check",
+            "--extra-php",
+            `<<PHP
                     define( 'DISALLOW_FILE_EDIT', true );
                     define( 'WP_CACHE', true );
                     define( 'WP_DEBUG', false );
@@ -76,15 +79,14 @@ const createWordpressConfig = wp => {
                     define('FS_METHOD', 'direct');
                 PHP
                 `,
-                " --allow-root"
-            ],
-            { stdio: ["inherit", "inherit", "pipe"] }
-        );
-    } catch (e) {
-        log("ee", e);
-    }
+            " --allow-root"
+        ],
+        { stdio: ["inherit", "inherit", "pipe"] }
+    );
 
+    if (stderr) log(stderr);
     resolingSpinner.stop();
+    log("");
 };
 
 const installPlugins = wp => {
@@ -93,13 +95,14 @@ const installPlugins = wp => {
     resolingSpinner.start();
 
     wp.plugins.forEach(plugin => {
-        try {
-            _child_process.spawnSync.call(void 0, "wp", ["plugin", "install", plugin, "--allow-root"], {
+        let { stderr } = _child_process.spawnSync.call(void 0, 
+            "wp",
+            ["plugin", "install", plugin, "--allow-root"],
+            {
                 stdio: ["inherit", "inherit", "pipe"]
-            });
-        } catch (e) {
-            log(e.stderr);
-        }
+            }
+        );
+        if (stderr) log(stderr);
     });
 
     resolingSpinner.stop();
