@@ -1,5 +1,5 @@
 import ReadFile from "../read-file";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
 import { Spinner } from "cli-spinner";
 const log = console.log;
 
@@ -21,12 +21,14 @@ const installWordpressCore = wp => {
     resolingSpinner.start();
 
     try {
-        let { stdout } = execSync(
-            `wp core download ${
-                wp.language ? "--locale=" + wp.language : ""
-            } --version=${wp.version} --allow-root`,
-            { stdio: "pipe" }
-        );
+        let arguments = [
+            "core",
+            "download",
+            `--version=${wp.version}`,
+            "--allow-root"
+        ];
+        if (wp.language) arguments.push(`--locale=${wp.language}`);
+        let { stdout } = spawnSync("wp", arguments, { stdio: "inherit" });
         log(stdout);
     } catch (e) {
         log(e.stderr);
@@ -41,11 +43,18 @@ const createWordpressConfig = wp => {
     resolingSpinner.start();
 
     try {
-        let {
-            stdout
-        } = execSync(
-            `wp config create  --dbname=${wp.config.dbname} --dbuser=${wp.config.dbuser} --dbpass=${wp.config.dbpass} --dbhost=${wp.config.dbhost}  --allow-root`,
-            { stdio: "pipe" }
+        let { stdout } = spawnSync(
+            "wp",
+            [
+                "config",
+                "create",
+                ` --dbname=${wp.config.dbname}`,
+                `--dbuser=${wp.config.dbuser}`,
+                `--dbpass=${wp.config.dbpass}`,
+                `--dbhost=${wp.config.dbhost}`,
+                " --allow-root"
+            ],
+            { stdio: "inherit" }
         );
         log(stdout);
     } catch (e) {
@@ -62,8 +71,8 @@ const installPlugins = wp => {
 
     wp.plugins.forEach(plugin => {
         try {
-            execSync(`wp plugin install ${plugin} --allow-root`, {
-                stdio: "pipe"
+            spawnSync("wp", ["plugin", "install", plugin, "--allow-root"], {
+                stdio: "inherit"
             });
         } catch (e) {
             log(e.stderr);
