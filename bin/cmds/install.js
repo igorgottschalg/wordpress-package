@@ -15,15 +15,15 @@ exports.handler = ({ options }) => {
 
     if (wp.config) {
         createWordpressConfig(wp);
-        if(options && options.includes("--only-config"))return;
+        if (options && options.includes("--only-config")) process.exit();
     }
     if (wp.version) {
         installWordpressCore(wp);
-       if(options &&  options.includes("--core-install")) return
+        if (options && options.includes("--core-install")) process.exit();
     }
     if (wp.plugins) {
         installPlugins(wp);
-        if (options && options.includes("--core-plugins")) return;
+        if (options && options.includes("--core-plugins")) process.exit();
     }
 };
 
@@ -61,10 +61,21 @@ const createWordpressConfig = wp => {
             [
                 "config",
                 "create",
-                ` --dbname=${wp.config.dbname}`,
+                `--dbname=${wp.config.dbname}`,
                 `--dbuser=${wp.config.dbuser}`,
                 `--dbpass=${wp.config.dbpass}`,
                 `--dbhost=${wp.config.dbhost}`,
+                '--skip-check',
+                '--extra-php',
+                `<<PHP
+                    define( 'DISALLOW_FILE_EDIT', true );
+                    define( 'WP_CACHE', true );
+                    define( 'WP_DEBUG', false );
+                    define( 'WP_DEBUG_LOG', false );
+                    define( 'WP_DEBUG_DISPLAY', false );
+                    define('FS_METHOD', 'direct');
+                PHP
+                `,
                 " --allow-root"
             ],
             { stdio: ["inherit", "inherit", "pipe"] }
