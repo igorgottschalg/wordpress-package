@@ -49,11 +49,11 @@ const installWordpressCore = wp => {
 
     let args = ["core", "download", `--version=${wp.version}`, "--allow-root"];
     if (wp.language) args.push(`--locale=${wp.language}`);
-    let { stderr  } = _child_process.spawnSync.call(void 0, "wp", args, {
+    let { stderr } = _child_process.spawnSync.call(void 0, "wp", args, {
         stdio: ["inherit", "inherit", "pipe"]
     });
 
-    if (stderr) log(stderr.toString('utf8'));
+    if (stderr) log(stderr.toString("utf8"));
     resolingSpinner.stop();
     log("");
 };
@@ -68,6 +68,7 @@ const createWordpressConfig = wp => {
         [
             "config",
             "create",
+            "--allow-root",
             `--dbname=${wp.config.dbname}`,
             `--dbuser=${wp.config.dbuser}`,
             `--dbpass=${wp.config.dbpass}`,
@@ -82,13 +83,12 @@ const createWordpressConfig = wp => {
                     define( 'WP_DEBUG_DISPLAY', false );
                     define('FS_METHOD', 'direct');
                 PHP
-                `,
-            " --allow-root"
+                `
         ],
         { stdio: ["inherit", "inherit", "pipe"] }
     );
 
-    if (stderr) log(stderr.toString('utf8'));
+    if (stderr) log(stderr.toString("utf8"));
     resolingSpinner.stop();
     log("");
 };
@@ -106,7 +106,7 @@ const installPlugins = wp => {
                 stdio: ["inherit", "inherit", "pipe"]
             }
         );
-        if (stderr) log(stderr.toString('utf8'));
+        if (stderr) log(stderr.toString("utf8"));
     });
     resolingSpinner.stop();
     log("");
