@@ -24,7 +24,7 @@ const resolvethemes = async themes => {
     resolingSpinner.start();
     const themesToAdd = [];
     await Promise.all(resolversPromise(themes)).then(results => {
-        results.every(response => {
+        results.forEach(response => {
             if (response.status === 200) {
                 const url = response.url.split("/");
                 themesToAdd.push(url[url.length - 2]);
@@ -47,7 +47,7 @@ exports.handler = async ({ themes }) => {
     _progress2.default.start(themesToAdd.length, 0);
 
     let addedtheme = Array();
-    themesToAdd.every(theme => {
+    themesToAdd.forEach(theme => {
         if (!wp.themes.includes(theme)) {
             wp.themes = [...wp.themes, theme];
             addedtheme.push(theme);

@@ -1,6 +1,6 @@
 {
     "name": "@gottschalg/wordpress-package",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "description": "A node.js JavaScript cli for create a WordPress package.json.",
     "main": "index.js",
     "preferGlobal": true,

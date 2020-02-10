@@ -24,7 +24,7 @@ const resolvePlugins = async plugins => {
     resolingSpinner.start();
     const pluginsToAdd = [];
     await Promise.all(resolversPromise(plugins)).then(results => {
-        results.every(response => {
+        results.forEach(response => {
             if (response.status === 200) {
                 const url = response.url.split("/");
                 pluginsToAdd.push(url[url.length - 2]);
@@ -47,7 +47,7 @@ exports.handler = async ({ plugins }) => {
     _progress2.default.start(pluginsToAdd.length, 0);
 
     let addedPlugin = Array();
-    pluginsToAdd.every(plugin => {
+    pluginsToAdd.forEach(plugin => {
         if (!wp.plugins.includes(plugin)) {
             wp.plugins = [...wp.plugins, plugin];
             addedPlugin.push(plugin);
