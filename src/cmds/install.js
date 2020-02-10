@@ -20,12 +20,17 @@ const installWordpressCore = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    let { stdout } = execSync(
-        `wp core download ${
-            wp.language ? "--locale=" + wp.language : ""
-        } --version=${wp.version} --allow-root`
-    );
-    log(stdout);
+    try {
+        let { stdout } = execSync(
+            `wp core download ${
+                wp.language ? "--locale=" + wp.language : ""
+            } --version=${wp.version} --allow-root`,
+            { stdio: "pipe" }
+        );
+        log(stdout);
+    } catch (e) {
+        log(e.stderr);
+    }
 
     resolingSpinner.stop();
 };
@@ -36,12 +41,15 @@ const createWordpressConfig = wp => {
     resolingSpinner.start();
 
     try {
-        let { stdout } = execSync(
-            `wp config create  --dbname=${wp.config.dbname} --dbuser=${wp.config.dbuser} --dbpass=${wp.config.dbpass} --dbhost=${wp.config.dbhost}  --allow-root`
+        let {
+            stdout
+        } = execSync(
+            `wp config create  --dbname=${wp.config.dbname} --dbuser=${wp.config.dbuser} --dbpass=${wp.config.dbpass} --dbhost=${wp.config.dbhost}  --allow-root`,
+            { stdio: "pipe" }
         );
         log(stdout);
     } catch (e) {
-        log("ee", e)
+        log("ee", e);
     }
 
     resolingSpinner.stop();
@@ -52,9 +60,15 @@ const installPlugins = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    wp.plugins.forEach(plugin =>
-        execSync(`wp plugin install ${plugin} --allow-root`)
-    );
+    wp.plugins.forEach(plugin => {
+        try {
+            execSync(`wp plugin install ${plugin} --allow-root`, {
+                stdio: "pipe"
+            });
+        } catch (e) {
+            log(e.stderr);
+        }
+    });
 
     resolingSpinner.stop();
 };
