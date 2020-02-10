@@ -13,7 +13,7 @@ exports.handler = ({ options }) => {
     if (!_readfile2.default.check()) return;
     let wp = _readfile2.default.read();
 
-    if (!options.length) options = Array("--all");
+    if (!options) options = Array("--all");
 
     if (
         (wp.version && options.includes("--core-install")) ||
