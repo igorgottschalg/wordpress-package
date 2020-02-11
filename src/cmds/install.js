@@ -4,11 +4,13 @@ import { Spinner } from "cli-spinner";
 import Chalk from "chalk";
 const log = console.log;
 
-exports.command = "install [options...]";
+exports.command = "install [options]";
 exports.aliases = "i";
 exports.desc = "Install a wordpress package";
 exports.builder = {
-    options: {}
+    options: {
+        default: "--all"
+    }
 };
 exports.handler = ({ options }) => {
     if (!ReadFile.check()) {
@@ -17,18 +19,16 @@ exports.handler = ({ options }) => {
     }
     let wp = ReadFile.read();
 
-    if (!options) options = Array("--all");
-
     switch (options) {
-        case options.includes("--core-install"):
+        case "--core-install":
             if (wp.version) installWordpressCore(wp);
             process.exit();
             break;
-        case options.includes("--core-config"):
+        case "--core-config":
             if (wp.config) createWordpressConfig(wp);
             process.exit();
             break;
-        case options.includes("--core-plugins"):
+        case "--core-plugins":
             if (wp.config) installPlugins(wp);
             process.exit();
             break;
@@ -87,11 +87,10 @@ const installPlugins = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    spawnSync("mkdir -p wp-content/plugins && cd wp-content/plugins"),
-        {
-            shell: true,
-            stdio: ["inherit", "inherit", "pipe"]
-        };
+    spawnSync("mkdir -p wp-content/plugins && cd wp-content/plugins", {
+        shell: true,
+        stdio: ["inherit", "inherit", "pipe"]
+    });
     wp.plugins.forEach(plugin => {
         downloadPlugin(plugin);
         unzipPlugin(plugin);
