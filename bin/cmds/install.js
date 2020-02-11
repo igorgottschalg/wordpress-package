@@ -93,7 +93,6 @@ const installPlugins = wp => {
         unzipPlugin(plugin);
         log(`${_chalk2.default.green("✔")} ${plugin} installed`);
     });
-
     _child_process.spawnSync.call(void 0, "rm *.zip && cd -");
     resolingSpinner.stop();
     log("");
@@ -101,20 +100,21 @@ const installPlugins = wp => {
 
 const unzipPlugin = plugin => {
     let { stderr } = _child_process.spawnSync.call(void 0, `unzip -q ${plugin}.zip`, {
-        stdio: ["inherit", "inherit", "pipe"]
+        stdio: ["inherit", "inherit"]
     });
-
     if (stderr) log(stderr.toString("utf8"));
 };
 
 const downloadPlugin = plugin => {
-    let { stderr } = _child_process.spawnSync.call(void 0, 
+    let r = _child_process.spawnSync.call(void 0, 
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
             stdio: ["inherit", "inherit"]
         }
     );
 
-    if (stderr) log(stderr.toString("utf8"));
+     log(r);
+
+    //if(stderr) log(stderr.toString("utf8"));
 };
 
