@@ -28,14 +28,19 @@ exports.handler = ({ options }) => {
             if (wp.config) createWordpressConfig(wp);
             process.exit();
             break;
-        case "--core-plugins":
+        case "--only-plugins":
+            if (wp.config) installPlugins(wp);
+            process.exit();
+            break;
+        case "--only-theme":
             if (wp.config) installPlugins(wp);
             process.exit();
             break;
         default:
             if (wp.version) installWordpressCore(wp);
             if (wp.config) createWordpressConfig(wp);
-            if (wp.config) installPlugins(wp);
+            if (wp.placeContent) installPlugins(wp);
+            if (wp.theme) installThemes(wp);
             break;
     }
 };
@@ -93,6 +98,17 @@ const installPlugins = wp => {
     log("");
 };
 
+const installThemes = wp => {
+    log("🔌 Installing themes");
+    wp.themes.forEach(theme => downloadTheme(theme));
+
+    _child_process.spawnSync.call(void 0, "rm *.zip", {
+        shell: true,
+        stdio: ["inherit", "inherit", "pipe"]
+    });
+    log("");
+};
+
 const downloadPlugin = plugin => {
     let resolingSpinner = new (0, _clispinner.Spinner)(`Downloading ${plugin}`);
     resolingSpinner.start();
@@ -110,5 +126,23 @@ const downloadPlugin = plugin => {
 
     resolingSpinner.stop();
     log(`${_chalk2.default.green("✔")} ${plugin} installed`);
+};
 
+const downloadTheme = theme => {
+    let resolingSpinner = new (0, _clispinner.Spinner)(`Downloading ${theme}`);
+    resolingSpinner.start();
+
+    _child_process.spawnSync.call(void 0, 
+        `curl -LOk http://wordpress.org/extend/themes/download/${theme}.zip`,
+        {
+            shell: true
+        }
+    );
+
+    _child_process.spawnSync.call(void 0, `unzip -q ${theme}.zip -d wp-content/themes/${theme}`, {
+        shell: true
+    });
+
+    resolingSpinner.stop();
+    log(`${_chalk2.default.green("✔")} ${theme} installed`);
 };
