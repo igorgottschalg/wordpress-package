@@ -97,14 +97,15 @@ const unzipPlugin = plugin => {
     let { stderr } = spawnSync(
         `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`,
         {
+            shell: true,
             stdio: ["inherit", "inherit"]
         }
     );
     if (!stderr) {
-        // spawnSync("rm *.zip", {
-        //     shell: true,
-        //     stdio: ["inherit", "inherit", "pipe"]
-        // });
+        spawnSync("rm *.zip", {
+            shell: true,
+            stdio: ["inherit", "inherit", "pipe"]
+        });
         log(`${Chalk.green("✔")} ${plugin} installed`);
     } else {
         log(stderr.toString("utf8"));
