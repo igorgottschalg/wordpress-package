@@ -88,17 +88,17 @@ const installPlugins = wp => {
     let resolingSpinner = new Spinner("%s 🔌 Installing plugins");
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
-
+    spawnSync("cd /wp-content/plugins");
     wp.plugins.forEach(plugin => {
         let { stderr } = spawnSync(
-            "wp",
-            ["plugin", "install", plugin, "--allow-root"],
+            "curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip && unzip -q ${plugin}.zip && rm ${plugin}.zip",
             {
                 stdio: ["inherit", "inherit", "pipe"]
             }
         );
         if (stderr) log(stderr.toString("utf8"));
     });
+    spawnSync("cd -");
     resolingSpinner.stop();
     log("");
 };
