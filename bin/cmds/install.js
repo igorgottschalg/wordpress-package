@@ -111,9 +111,10 @@ const downloadPlugin = plugin => {
     let { stderr } = _child_process.spawnSync.call(void 0, 
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
-            stdio: ["inherit", "inherit", "pipe"]
+            stdio: ["inherit", "inherit"]
         }
     );
 
     if (stderr) log(stderr.toString("utf8"));
 };
+
