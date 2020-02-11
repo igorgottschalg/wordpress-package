@@ -83,23 +83,18 @@ const createWordpressConfig = wp => {
 };
 
 const installPlugins = wp => {
-    let resolingSpinner = new Spinner("%s 🔌 Installing plugins");
-    resolingSpinner.setSpinnerString("|/-\\");
-    resolingSpinner.start();
-
+    log("%s 🔌 Installing plugins");
     wp.plugins.forEach(plugin => downloadPlugin(plugin));
 
     spawnSync("rm *.zip", {
         shell: true,
         stdio: ["inherit", "inherit", "pipe"]
     });
-
-    resolingSpinner.stop();
     log("");
 };
 
 const unzipPlugin = plugin => {
-    let { stderr } = spawnSync(
+    let stderr  = spawnSync(
         `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`,
         {
             shell: true,
