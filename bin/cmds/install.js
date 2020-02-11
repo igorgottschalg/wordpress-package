@@ -87,23 +87,35 @@ const installPlugins = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    let { stderr } = _child_process.spawnSync.call(void 0, 
-        "mkdir -p wp-content/plugins && cd wp-content/plugins"
-    );
-    if (stderr) log(stderr.toString("utf8"));
-
+    _child_process.spawnSync.call(void 0, "mkdir -p wp-content/plugins && cd wp-content/plugins");
     wp.plugins.forEach(plugin => {
-        let { stderr } = _child_process.spawnSync.call(void 0, 
-            `curl -O http://wordpress.org/extend/plugins/download/${plugin}.zip && unzip -q ${plugin}.zip`,
-            {
-                stdio: ["inherit", "inherit", "pipe"]
-            }
-        );
-        if (stderr) log(stderr.toString("utf8"));
-        log(`${plugin} installed`);
+        downloadPlugin(plugin);
+        unzipPlugin(plugin);
+        log(`${_chalk2.default.green("✔")} ${plugin} installed`);
     });
 
     _child_process.spawnSync.call(void 0, "rm *.zip && cd -");
     resolingSpinner.stop();
     log("");
+};
+
+const unzipPlugin = plugin => {
+    let { stderr } = _child_process.spawnSync.call(void 0, `unzip -q ${plugin}.zip`, {
+        stdio: ["inherit", "inherit", "pipe"]
+    });
+
+    if (stderr) log(stderr.toString("utf8"));
+};
+
+const downloadPlugin = plugin => {
+    if (stderr) log(stderr.toString("utf8"));
+
+    let { stderr } = _child_process.spawnSync.call(void 0, 
+        `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
+        {
+            stdio: ["inherit", "inherit", "pipe"]
+        }
+    );
+
+    if (stderr) log(stderr.toString("utf8"));
 };
