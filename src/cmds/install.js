@@ -88,7 +88,7 @@ const installPlugins = wp => {
     let resolingSpinner = new Spinner("%s 🔌 Installing plugins");
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
-    spawnSync("cd /wp-content/plugins");
+    spawnSync("mkdir -p wp-content/plugins && cd wp-content/plugins");
     wp.plugins.forEach(plugin => {
         let { stderr } = spawnSync(
             "curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip && unzip -q ${plugin}.zip && rm ${plugin}.zip",
