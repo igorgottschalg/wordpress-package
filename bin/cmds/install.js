@@ -83,8 +83,10 @@ const createWordpressConfig = wp => {
 };
 
 const installPlugins = wp => {
-    log("%s 🔌 Installing plugins");
-    wp.plugins.forEach(plugin => downloadPlugin(plugin));
+    log("🔌 Installing plugins");
+    wp.plugins.forEach(plugin => {
+        if (downloadPlugin(plugin)) unzipPlugin(plugin);
+    });
 
     _child_process.spawnSync.call(void 0, "rm *.zip", {
         shell: true,
@@ -94,7 +96,7 @@ const installPlugins = wp => {
 };
 
 const unzipPlugin = plugin => {
-    let stderr  = _child_process.spawnSync.call(void 0, 
+    let stderr = _child_process.spawnSync.call(void 0, 
         `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`,
         {
             shell: true,
@@ -114,6 +116,9 @@ const downloadPlugin = plugin => {
         }
     );
 
-    if (!stderr) unzipPlugin(plugin);
-    else log(stderr.toString("utf8"));
+    if (stderr) {
+        log(stderr.toString("utf8"));
+        return false;
+    }
+    return true;
 };
