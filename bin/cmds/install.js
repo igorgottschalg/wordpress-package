@@ -84,9 +84,7 @@ const createWordpressConfig = wp => {
 
 const installPlugins = wp => {
     log("🔌 Installing plugins");
-    wp.plugins.forEach(plugin => {
-        if (downloadPlugin(plugin)) unzipPlugin(plugin);
-    });
+    wp.plugins.forEach(plugin => downloadPlugin(plugin));
 
     _child_process.spawnSync.call(void 0, "rm *.zip", {
         shell: true,
@@ -95,27 +93,22 @@ const installPlugins = wp => {
     log("");
 };
 
-const unzipPlugin = plugin => {
-    _child_process.spawnSync.call(void 0, 
-        `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`,
-        {
-            shell: true,
-        }
-    );
-    log(`${_chalk2.default.green("✔")} ${plugin} installed`);
-};
-
 const downloadPlugin = plugin => {
-    let resolingSpinner = new (0, _clispinner.Spinner)(`%s Downloading ${plugin}`);
-    resolingSpinner.setSpinnerString("|/-\\");
+    let resolingSpinner = new (0, _clispinner.Spinner)(`Downloading ${plugin}`);
     resolingSpinner.start();
 
     _child_process.spawnSync.call(void 0, 
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
-            shell: true,
+            shell: true
         }
     );
 
+    _child_process.spawnSync.call(void 0, `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`, {
+        shell: true
+    });
+
     resolingSpinner.stop();
+    log(`${_chalk2.default.green("✔")} ${plugin} installed`);
+
 };
