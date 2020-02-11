@@ -108,8 +108,6 @@ const unzipPlugin = plugin => {
 };
 
 const downloadPlugin = plugin => {
-    if (stderr) log(stderr.toString("utf8"));
-
     let { stderr } = spawnSync(
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
