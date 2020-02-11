@@ -89,14 +89,14 @@ const installPlugins = wp => {
     _child_process.spawnSync.call(void 0, "mkdir -p wp-content/plugins && cd wp-content/plugins");
     wp.plugins.forEach(plugin => {
         let { stderr } = _child_process.spawnSync.call(void 0, 
-            "curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip && unzip -q ${plugin}.zip && rm ${plugin}.zip",
+            `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip && unzip -q ${plugin}.zip`,
             {
                 stdio: ["inherit", "inherit", "pipe"]
             }
         );
         if (stderr) log(stderr.toString("utf8"));
     });
-    _child_process.spawnSync.call(void 0, "cd -");
+    _child_process.spawnSync.call(void 0, "rm *.zip && cd -");
     resolingSpinner.stop();
     log("");
 };
