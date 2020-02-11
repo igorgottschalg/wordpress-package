@@ -109,6 +109,7 @@ const downloadPlugin = plugin => {
     let r = spawnSync(
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
+            shell: true,
             stdio: ["inherit", "inherit"]
         }
     );
