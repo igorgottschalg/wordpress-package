@@ -86,19 +86,21 @@ const installPlugins = wp => {
     let resolingSpinner = new (0, _clispinner.Spinner)("%s 🔌 Installing plugins");
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
-    log(wp.plugins.join("\n"));
 
-    let { stderr } = _child_process.spawnSync.call(void 0, "mkdir -p wp-content/plugins && cd wp-content/plugins");
+    let { stderr } = _child_process.spawnSync.call(void 0, 
+        "mkdir -p wp-content/plugins && cd wp-content/plugins"
+    );
     if (stderr) log(stderr.toString("utf8"));
 
     wp.plugins.forEach(plugin => {
         let { stderr } = _child_process.spawnSync.call(void 0, 
-            `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip && unzip -q ${plugin}.zip`,
+            `curl -O http://wordpress.org/extend/plugins/download/${plugin}.zip && unzip -q ${plugin}.zip`,
             {
                 stdio: ["inherit", "inherit", "pipe"]
             }
         );
         if (stderr) log(stderr.toString("utf8"));
+        log(`${plugin} installed`);
     });
 
     _child_process.spawnSync.call(void 0, "rm *.zip && cd -");
