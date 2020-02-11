@@ -96,29 +96,26 @@ const installPlugins = wp => {
 };
 
 const unzipPlugin = plugin => {
-    let stderr = spawnSync(
+    spawnSync(
         `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`,
         {
             shell: true,
-            stdio: ["inherit", "inherit"]
         }
     );
-    if (!stderr) log(`${Chalk.green("✔")} ${plugin} installed`);
-    else log(stderr.toString("utf8"));
+    log(`${Chalk.green("✔")} ${plugin} installed`);
 };
 
 const downloadPlugin = plugin => {
-    let { stderr } = spawnSync(
+    let resolingSpinner = new Spinner(`%s Downloading ${plugin}`);
+    resolingSpinner.setSpinnerString("|/-\\");
+    resolingSpinner.start();
+
+    spawnSync(
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
             shell: true,
-            stdio: ["inherit", "inherit", "pipe"]
         }
     );
 
-    if (stderr) {
-        log(stderr.toString("utf8"));
-        return false;
-    }
-    return true;
+    resolingSpinner.stop();
 };
