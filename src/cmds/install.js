@@ -19,26 +19,24 @@ exports.handler = ({ options }) => {
 
     if (!options) options = Array("--all");
 
-    if (
-        (wp.version && options.includes("--core-install")) ||
-        options.includes("--all")
-    ) {
-        installWordpressCore(wp);
-        if (options.includes("--core-install")) process.exit();
-    }
-    if (
-        (wp.config && options.includes("--core-config")) ||
-        options.includes("--all")
-    ) {
-        createWordpressConfig(wp);
-        if (options.includes("--only-config")) process.exit();
-    }
-    if (
-        (wp.plugins && options.includes("--core-plugins")) ||
-        options.includes("--all")
-    ) {
-        installPlugins(wp);
-        if (options.includes("--core-plugins")) process.exit();
+    switch (options) {
+        case options.includes("--core-install"):
+            if (wp.version) installWordpressCore(wp);
+            process.exit();
+            break;
+        case options.includes("--core-config"):
+            if (wp.config) createWordpressConfig(wp);
+            process.exit();
+            break;
+        case options.includes("--core-plugins"):
+            if (wp.config) installPlugins(wp);
+            process.exit();
+            break;
+        default:
+            if (wp.version) installWordpressCore(wp);
+            if (wp.config) createWordpressConfig(wp);
+            if (wp.config) installPlugins(wp);
+            break;
     }
 };
 
@@ -74,7 +72,7 @@ const createWordpressConfig = wp => {
             `--dbpass=${wp.config.dbpass}`,
             `--dbhost=${wp.config.dbhost}`,
             "--skip-check",
-            "--extra-php=define( 'DISALLOW_FILE_EDIT', true ); \n define( 'WP_CACHE', true ); \n define( 'WP_DEBUG', false ); \n define( 'WP_DEBUG_LOG', false ); \n define( 'WP_DEBUG_DISPLAY', false ); \n define('FS_METHOD', 'direct'); \n",
+            "--extra-php=define( 'DISALLOW_FILE_EDIT', true ); \n define( 'WP_CACHE', true ); \n define( 'WP_DEBUG', false ); \n define( 'WP_DEBUG_LOG', false ); \n define( 'WP_DEBUG_DISPLAY', false ); \n define('FS_METHOD', 'direct'); \n"
         ],
         { stdio: ["inherit", "inherit", "pipe"] }
     );
