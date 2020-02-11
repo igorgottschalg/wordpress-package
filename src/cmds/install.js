@@ -89,6 +89,11 @@ const installPlugins = wp => {
 
     wp.plugins.forEach(plugin => downloadPlugin(plugin));
 
+    spawnSync("rm *.zip", {
+        shell: true,
+        stdio: ["inherit", "inherit", "pipe"]
+    });
+
     resolingSpinner.stop();
     log("");
 };
@@ -101,15 +106,8 @@ const unzipPlugin = plugin => {
             stdio: ["inherit", "inherit"]
         }
     );
-    if (!stderr) {
-        spawnSync("rm *.zip", {
-            shell: true,
-            stdio: ["inherit", "inherit", "pipe"]
-        });
-        log(`${Chalk.green("✔")} ${plugin} installed`);
-    } else {
-        log(stderr.toString("utf8"));
-    }
+    if (!stderr) log(`${Chalk.green("✔")} ${plugin} installed`);
+    else log(stderr.toString("utf8"));
 };
 
 const downloadPlugin = plugin => {
@@ -121,9 +119,6 @@ const downloadPlugin = plugin => {
         }
     );
 
-    if (!stderr) {
-        unzipPlugin(plugin);
-    } else {
-        log(stderr.toString("utf8"));
-    }
+    if (!stderr) unzipPlugin(plugin);
+    else log(stderr.toString("utf8"));
 };
