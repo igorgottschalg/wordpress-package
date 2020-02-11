@@ -87,28 +87,28 @@ const installPlugins = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    spawnSync("mkdir -p wp-content/plugins && cd wp-content/plugins", {
-        shell: true,
-        stdio: ["inherit", "inherit", "pipe"]
-    });
-    wp.plugins.forEach(plugin => {
-        downloadPlugin(plugin);
-        unzipPlugin(plugin);
-        log(`${Chalk.green("✔")} ${plugin} installed`);
-    });
-    spawnSync("rm *.zip && cd -", {
-        shell: true,
-        stdio: ["inherit", "inherit", "pipe"]
-    });
+    wp.plugins.forEach(plugin => downloadPlugin(plugin));
+
     resolingSpinner.stop();
     log("");
 };
 
 const unzipPlugin = plugin => {
-    let { stderr } = spawnSync(`unzip -q ${plugin}.zip`, {
-        stdio: ["inherit", "inherit"]
-    });
-    if (stderr) log(stderr.toString("utf8"));
+    let { stderr } = spawnSync(
+        `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`,
+        {
+            stdio: ["inherit", "inherit"]
+        }
+    );
+    if (!stderr) {
+        // spawnSync("rm *.zip", {
+        //     shell: true,
+        //     stdio: ["inherit", "inherit", "pipe"]
+        // });
+        log(`${Chalk.green("✔")} ${plugin} installed`);
+    } else {
+        log(stderr.toString("utf8"));
+    }
 };
 
 const downloadPlugin = plugin => {
@@ -119,5 +119,10 @@ const downloadPlugin = plugin => {
             stdio: ["inherit", "inherit", "pipe"]
         }
     );
-    if (stderr) log(stderr.toString("utf8"));
+
+    if (!stderr) {
+        unzipPlugin(plugin);
+    } else {
+        log(stderr.toString("utf8"));
+    }
 };
