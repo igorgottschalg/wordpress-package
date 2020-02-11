@@ -87,13 +87,20 @@ const installPlugins = wp => {
     resolingSpinner.setSpinnerString("|/-\\");
     resolingSpinner.start();
 
-    spawnSync("mkdir -p wp-content/plugins && cd wp-content/plugins");
+    spawnSync("mkdir -p wp-content/plugins && cd wp-content/plugins"),
+        {
+            shell: true,
+            stdio: ["inherit", "inherit", "pipe"]
+        };
     wp.plugins.forEach(plugin => {
         downloadPlugin(plugin);
         unzipPlugin(plugin);
         log(`${Chalk.green("✔")} ${plugin} installed`);
     });
-    spawnSync("rm *.zip && cd -");
+    spawnSync("rm *.zip && cd -", {
+        shell: true,
+        stdio: ["inherit", "inherit", "pipe"]
+    });
     resolingSpinner.stop();
     log("");
 };
@@ -106,16 +113,12 @@ const unzipPlugin = plugin => {
 };
 
 const downloadPlugin = plugin => {
-    let r = spawnSync(
+    let { stderr } = spawnSync(
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
             shell: true,
-            stdio: ["inherit", "inherit"]
+            stdio: ["inherit", "inherit", "pipe"]
         }
     );
-
-     log(r);
-
-    //if(stderr) log(stderr.toString("utf8"));
+    if (stderr) log(stderr.toString("utf8"));
 };
-
