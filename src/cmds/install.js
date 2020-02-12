@@ -39,8 +39,8 @@ exports.handler = ({ options }) => {
         default:
             if (wp.version) installWordpressCore(wp);
             if (wp.config) createWordpressConfig(wp);
-            if (wp.placeContent) installPlugins(wp);
-            if (wp.theme) installThemes(wp);
+            if (wp.plugins) installPlugins(wp);
+            if (wp.themes) installThemes(wp);
             break;
     }
 };
