@@ -81,7 +81,6 @@ const createWordpressConfig = wp => {
         ],
         { stdio: ["inherit", "inherit", "pipe"] }
     );
-
     if (stderr) log(stderr.toString("utf8"));
     resolingSpinner.stop();
     log("");
@@ -90,7 +89,6 @@ const createWordpressConfig = wp => {
 const installPlugins = wp => {
     log("🔌 Installing plugins");
     wp.plugins.forEach(plugin => downloadPlugin(plugin));
-
     spawnSync("rm *.zip", {
         shell: true,
         stdio: ["inherit", "inherit", "pipe"]
@@ -101,7 +99,6 @@ const installPlugins = wp => {
 const installThemes = wp => {
     log("🔌 Installing themes");
     wp.themes.forEach(theme => downloadTheme(theme));
-
     spawnSync("rm *.zip", {
         shell: true,
         stdio: ["inherit", "inherit", "pipe"]
@@ -110,39 +107,27 @@ const installThemes = wp => {
 };
 
 const downloadPlugin = plugin => {
-    let resolingSpinner = new Spinner(`Downloading ${plugin}`);
-    resolingSpinner.start();
-
     spawnSync(
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
             shell: true
         }
     );
-
     spawnSync(`unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`, {
         shell: true
     });
-
-    resolingSpinner.stop();
     log(`${Chalk.green("✔")} ${plugin} installed`);
 };
 
 const downloadTheme = theme => {
-    let resolingSpinner = new Spinner(`Downloading ${theme}`);
-    resolingSpinner.start();
-
     spawnSync(
         `curl -LOk http://wordpress.org/extend/themes/download/${theme}.zip`,
         {
             shell: true
         }
     );
-
     spawnSync(`unzip -q ${theme}.zip -d wp-content/themes/${theme}`, {
         shell: true
     });
-
-    resolingSpinner.stop();
     log(`${Chalk.green("✔")} ${theme} installed`);
 };
