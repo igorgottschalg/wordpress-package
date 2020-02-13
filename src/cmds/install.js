@@ -1,7 +1,8 @@
 import ReadFile from "../read-file";
 import { spawnSync } from "child_process";
 import { Spinner } from "cli-spinner";
-import Chalk from "chalk";
+import fs from "fs";
+import chalk from "chalk";
 const log = console.log;
 
 exports.command = "install [options]";
@@ -14,7 +15,7 @@ exports.builder = {
 };
 exports.handler = ({ options }) => {
     if (!ReadFile.check()) {
-        log(Chalk.red("Wordpress package not found!"));
+        log(chalk.red("Wordpress package not found!"));
         process.exit();
     }
     let wp = ReadFile.read();
@@ -107,6 +108,7 @@ const installThemes = wp => {
 };
 
 const downloadPlugin = plugin => {
+    if (fs.existsSync(`wp-content/plugins/${plugin}`)) return;
     spawnSync(
         `curl -LOk http://wordpress.org/extend/plugins/download/${plugin}.zip`,
         {
@@ -116,7 +118,7 @@ const downloadPlugin = plugin => {
     spawnSync(`unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`, {
         shell: true
     });
-    log(`${Chalk.green("✔")} ${plugin} installed`);
+    log(`${chalk.green("✔")} ${plugin}`);
 };
 
 const downloadTheme = theme => {
@@ -129,5 +131,5 @@ const downloadTheme = theme => {
     spawnSync(`unzip -q ${theme}.zip -d wp-content/themes/${theme}`, {
         shell: true
     });
-    log(`${Chalk.green("✔")} ${theme} installed`);
+    log(`${chalk.green("✔")} ${theme}`);
 };
