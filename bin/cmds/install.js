@@ -115,7 +115,7 @@ const downloadPlugin = plugin => {
             shell: true
         }
     );
-    _child_process.spawnSync.call(void 0, `unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`, {
+    _child_process.spawnSync.call(void 0, `unzip -q ${plugin}.zip -d wp-content/plugins/`, {
         shell: true
     });
     log(`${_chalk2.default.green("✔")} ${plugin}`);
@@ -128,7 +128,7 @@ const downloadTheme = theme => {
             shell: true
         }
     );
-    _child_process.spawnSync.call(void 0, `unzip -q ${theme}.zip -d wp-content/themes/${theme}`, {
+    _child_process.spawnSync.call(void 0, `unzip -q ${theme}.zip -d wp-content/themes/`, {
         shell: true
     });
     log(`${_chalk2.default.green("✔")} ${theme}`);

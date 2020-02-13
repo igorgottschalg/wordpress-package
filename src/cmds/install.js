@@ -115,7 +115,7 @@ const downloadPlugin = plugin => {
             shell: true
         }
     );
-    spawnSync(`unzip -q ${plugin}.zip -d wp-content/plugins/${plugin}`, {
+    spawnSync(`unzip -q ${plugin}.zip -d wp-content/plugins/`, {
         shell: true
     });
     log(`${chalk.green("✔")} ${plugin}`);
@@ -128,7 +128,7 @@ const downloadTheme = theme => {
             shell: true
         }
     );
-    spawnSync(`unzip -q ${theme}.zip -d wp-content/themes/${theme}`, {
+    spawnSync(`unzip -q ${theme}.zip -d wp-content/themes/`, {
         shell: true
     });
     log(`${chalk.green("✔")} ${theme}`);
